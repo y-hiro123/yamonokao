@@ -1,0 +1,75 @@
+/* 基本スタイル */
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  
+  h1 {
+    margin-top: 20px;
+    color: #333;
+  }
+  
+  #instructions {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  /* ゲームボード */
+  .game-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+  }
+  
+  /* カードスタイル */
+  .card {
+    width: 100px;
+    height: 150px;
+    background-color: #ccc;
+    border: 2px solid #333;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: transparent;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+  }
+  
+  .card.flipped, .card.matched {
+    background-color: #fff;
+    color: #000;
+    cursor: default;
+    transform: rotateY(180deg);
+  }
+  
+  /* リスタートボタン */
+  #restart-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  #restart-button:hover {
+    background-color: #0056b3;
+  }
+  /* スコア表示 */
+  #score-board {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+  }
+  
