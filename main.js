@@ -1,4 +1,4 @@
-const symbols = ["🍎", "🍌", "🍇", "🍓", "🍍", "🍒"];
+const symbols = ["img\IMG_4146[1].jpg", "img\IMG_4147.JPG", "img\IMG_4148.JPG", "img\IMG_4149.JPG", "img\IMG_4150.JPG", "img\IMG_4151.JPG"];
 const cards = [...symbols, ...symbols]; // ペアを作成
 
 const gameBoard = document.getElementById("game-board");
