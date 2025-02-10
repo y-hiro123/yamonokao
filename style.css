@@ -1,6 +1,8 @@
 body {
   text-align: center;
   font-family: Arial, sans-serif;
+  background-image: url(img/1218717.jpg);
+  background-size: 1920px;
 }
 
 #game-board {
@@ -38,3 +40,29 @@ body {
 .card.flipped {
   transform: rotateY(180deg);
 }
+
+h1{
+  color: black;
+  font-weight: bold;
+  -webkit-text-stroke: 8px red;
+  paint-order: stroke;
+  text-shadow: white 3px 0 7px;
+}
+
+#player-score{
+  color: white;
+  font-weight: bold;
+  -webkit-text-stroke: 4px red;
+  paint-order: stroke;
+  text-shadow: yellow 5px 0 10px;
+  margin-right: 20px;
+}
+
+#cpu-score{
+  color: white;
+  font-weight: bold;
+  -webkit-text-stroke: 4px red;
+  paint-order: stroke;
+  text-shadow: yellow 5px 0 10px;
+}
+
