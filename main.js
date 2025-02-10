@@ -23,8 +23,6 @@ function nonItemSelect() {
 //==============メニュー.html==============//
 path = location.pathname.slice(-10);
 if (path == "/menu.html") {
-    //myCoin
-    myCoinCounter();
 
     //menu限定
     selectBoxList();
