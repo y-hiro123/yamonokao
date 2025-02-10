@@ -1,0 +1,24 @@
+body{
+    background-color: black;
+}
+
+h1{
+    font-size: 150px;
+    padding-left: 560px;
+    color: white;
+}
+
+p{
+    color:white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-style: italic;
+    margin-left: 850px;
+    font-size: 50px;
+}
