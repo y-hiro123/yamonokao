@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let firstChoice, secondChoice;
 
     for (let symbol in cpuMemory) {
-      if (cpuMemory[symbol].length === 2) {
+      if (cpuMemory[symbol].length < 2) {
         [firstChoice, secondChoice] = cpuMemory[symbol];
         cpuMemory[symbol] = [];
         break;
