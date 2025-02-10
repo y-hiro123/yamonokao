@@ -1,168 +1,210 @@
-const symbols = ["img\IMG_4146[1].jpg", "img\IMG_4147.JPG", "img\IMG_4148.JPG", "img\IMG_4149.JPG", "img\IMG_4150.JPG", "img\IMG_4151.JPG"];
-const cards = [...symbols, ...symbols]; // ペアを作成
+document.addEventListener("DOMContentLoaded", async () => {
+  const gameBoard = document.getElementById("game-board");
+  const playerScoreElement = document.getElementById("player-score");
+  const cpuScoreElement = document.getElementById("cpu-score");
+  const restartButton = document.getElementById("restart-button");
 
-const gameBoard = document.getElementById("game-board");
-const playerScoreElement = document.getElementById("player-score");
-const cpuScoreElement = document.getElementById("cpu-score");
-const restartButton = document.getElementById("restart-button");
+  let images = await loadImages();
+  const cards = [...images, ...images]; // 画像を2枚ずつ用意
 
-// 状態管理
-let firstCard = null;
-let secondCard = null;
-let preventClick = false;
-let matchedCount = 0;
-let playerScore = 0;
-let cpuScore = 0;
-let isPlayerTurn = true; // プレイヤーのターン管理
+  let firstCard = null;
+  let secondCard = null;
+  let preventClick = false;
+  let matchedCount = 0;
+  let playerScore = 0;
+  let cpuScore = 0;
+  let isPlayerTurn = true;
+  let cpuMemory = {}; // CPU の記憶用
 
-// カードをシャッフルする関数
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
   }
-}
-shuffle(cards);
 
-// カード生成
-function createCards() {
-  cards.forEach((symbol) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.dataset.symbol = symbol;
+  async function loadImages() {
+    return [
+      "img/IMG_4146.jpg",
+      "img/IMG_4147.JPG",
+      "img/IMG_4148.JPG",
+      "img/IMG_4149.JPG",
+      "img/IMG_4150.JPG",
+      "img/IMG_4151.JPG"
+    ];
+  }
 
-    card.addEventListener("click", () => {
-      if (preventClick || !isPlayerTurn || card.classList.contains("flipped") || card.classList.contains("matched")) {
-        return;
-      }
+  function createCards() {
+    gameBoard.innerHTML = "";
+    shuffle(cards);
+    cards.forEach((symbol) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.dataset.symbol = symbol; // 画像のパスをデータ属性にセット
 
-      flipCard(card);
+      const frontFace = document.createElement("div");
+      frontFace.classList.add("front");
 
-      if (!firstCard) {
-        firstCard = card; // 最初のカード
-      } else {
-        secondCard = card; // 2枚目のカード
-        checkMatch();
-      }
+      const backFace = document.createElement("div");
+      backFace.classList.add("back");
+
+      const img = document.createElement("img");
+      img.src = symbol;
+      img.style.width = "120px";
+      img.style.height = "120px";
+      img.style.objectFit = "cover";
+      backFace.appendChild(img);
+
+      card.appendChild(frontFace);
+      card.appendChild(backFace);
+
+      card.addEventListener("click", () => {
+        if (preventClick || !isPlayerTurn || card.classList.contains("flipped") || card.classList.contains("matched")) {
+          return;
+        }
+
+        flipCard(card);
+        rememberCard(card);
+
+        if (!firstCard) {
+          firstCard = card;
+        } else {
+          secondCard = card;
+          preventClick = true;
+          checkMatch();
+        }
+      });
+
+      gameBoard.appendChild(card);
     });
+  }
 
-    gameBoard.appendChild(card);
-  });
-}
+  function flipCard(card) {
+    card.classList.add("flipped");
+  }
 
-// カードを裏返す
-function flipCard(card) {
-  card.classList.add("flipped");
-  card.textContent = card.dataset.symbol;
-}
-
-// カードを裏返す（元に戻す）
-function unflipCards(card1, card2) {
-  setTimeout(() => {
-    card1.classList.remove("flipped");
-    card2.classList.remove("flipped");
-    card1.textContent = "";
-    card2.textContent = "";
-  }, 1000);
-}
-
-// ペア判定
-function checkMatch() {
-  if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
-    firstCard.classList.add("matched");
-    secondCard.classList.add("matched");
-
-    // スコア加算
-    if (isPlayerTurn) {
-      playerScore++;
-      playerScoreElement.textContent = `プレイヤー: ${playerScore}`;
-    } else {
-      cpuScore++;
-      cpuScoreElement.textContent = `CPU: ${cpuScore}`;
-    }
-
-    matchedCount += 1;
-
-    // ゲーム終了判定
-    if (matchedCount === cards.length / 2) {
-      setTimeout(() => {
-        const winner = playerScore > cpuScore ? "プレイヤーの勝ち！" : "CPUの勝ち！";
-        alert(`${winner}`);
-      }, 500);
-    }
-
-    // ペアが揃った場合はターンを維持
-    resetTurn(false); // ターンを切り替えない
-    if (!isPlayerTurn) {
-      setTimeout(cpuTurn, 1000); // CPUがペアを当てたらもう一度カードをめくる
-    }
-  } else {
-    preventClick = true;
-    unflipCards(firstCard, secondCard);
+  function unflipCards(card1, card2) {
     setTimeout(() => {
-      resetTurn(true); // ターンを切り替える
+      card1.classList.remove("flipped");
+      card2.classList.remove("flipped");
+      preventClick = false;
     }, 1000);
   }
-}
 
-// ターンをリセット
-function resetTurn(switchTurn) {
-  firstCard = null;
-  secondCard = null;
-  preventClick = false;
-
-  // ターンを切り替える場合のみフラグを変更
-  if (switchTurn) {
-    isPlayerTurn = !isPlayerTurn;
-
-    // CPUのターンの場合は自動で動作
-    if (!isPlayerTurn) {
-      setTimeout(cpuTurn, 1000);
+  function rememberCard(card) {
+    const symbol = card.dataset.symbol;
+    if (!cpuMemory[symbol]) {
+      cpuMemory[symbol] = [];
+    }
+    if (cpuMemory[symbol].length < 2) {
+      cpuMemory[symbol].push(card);
     }
   }
-}
 
-// CPUのターン
-function cpuTurn() {
-  const availableCards = Array.from(document.querySelectorAll(".card:not(.flipped):not(.matched)"));
+  function checkMatch() {
+    if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
+      firstCard.classList.add("matched");
+      secondCard.classList.add("matched");
 
-  if (availableCards.length < 2) return;
+      setTimeout(() => {
+        matchedCount += 1;
 
-  // ランダムで2枚のカードを選ぶ
-  const firstChoice = availableCards[Math.floor(Math.random() * availableCards.length)];
-  flipCard(firstChoice);
+        if (matchedCount === cards.length / 2) {
+          setTimeout(() => {
+            alert("ゲーム終了！");
+          }, 500);
+        }
 
-  let secondChoice;
-  do {
-    secondChoice = availableCards[Math.floor(Math.random() * availableCards.length)];
-  } while (secondChoice === firstChoice);
+        if (isPlayerTurn) {
+          playerScore++;
+          playerScoreElement.textContent = `プレイヤー: ${playerScore}`;
+        } else {
+          cpuScore++;
+          cpuScoreElement.textContent = `CPU: ${cpuScore}`;
+        }
 
-  setTimeout(() => {
-    flipCard(secondChoice);
-    firstCard = firstChoice;
-    secondCard = secondChoice;
-    checkMatch();
-  }, 1000);
-}
+        resetTurn(false);
+      }, 500);
+    } else {
+      setTimeout(() => {
+        unflipCards(firstCard, secondCard);
+      }, 1000);
+      setTimeout(() => {
+        resetTurn(true);
+      }, 1500);
+    }
+  }
 
-// ゲームリセット
-function resetGame() {
-  gameBoard.innerHTML = "";
-  firstCard = null;
-  secondCard = null;
-  preventClick = false;
-  matchedCount = 0;
-  playerScore = 0;
-  cpuScore = 0;
-  isPlayerTurn = true;
+  function resetTurn(switchTurn) {
+    firstCard = null;
+    secondCard = null;
+    preventClick = false;
 
-  playerScoreElement.textContent = "プレイヤー: 0";
-  cpuScoreElement.textContent = "CPU: 0";
+    if (switchTurn) {
+      isPlayerTurn = !isPlayerTurn;
+      if (!isPlayerTurn) {
+        setTimeout(cpuTurn, 1000);
+      }
+    } else {
+      if (!isPlayerTurn) {
+        setTimeout(cpuTurn, 1000);
+      }
+    }
+  }
 
-  shuffle(cards);
+  function cpuTurn() {
+    if (isPlayerTurn || preventClick) return;
+    preventClick = true;
+
+    const availableCards = Array.from(document.querySelectorAll(".card:not(.flipped):not(.matched)"));
+
+    if (availableCards.length < 2) {
+      preventClick = false;
+      return;
+    }
+
+    let firstChoice, secondChoice;
+
+    for (let symbol in cpuMemory) {
+      if (cpuMemory[symbol].length === 2) {
+        [firstChoice, secondChoice] = cpuMemory[symbol];
+        cpuMemory[symbol] = [];
+        break;
+      }
+    }
+
+    if (!firstChoice || !secondChoice) {
+      firstChoice = availableCards[Math.floor(Math.random() * availableCards.length)];
+      do {
+        secondChoice = availableCards[Math.floor(Math.random() * availableCards.length)];
+      } while (secondChoice === firstChoice);
+    }
+
+    flipCard(firstChoice);
+    setTimeout(() => {
+      flipCard(secondChoice);
+      firstCard = firstChoice;
+      secondCard = secondChoice;
+      checkMatch();
+    }, 1000);
+  }
+
+  function resetGame() {
+    firstCard = null;
+    secondCard = null;
+    preventClick = false;
+    matchedCount = 0;
+    playerScore = 0;
+    cpuScore = 0;
+    isPlayerTurn = true;
+    cpuMemory = {};
+    playerScoreElement.textContent = "プレイヤー: 0";
+    cpuScoreElement.textContent = "CPU: 0";
+
+    shuffle(cards);
+    createCards();
+  }
+
   createCards();
-}
-
-// 初期化
-createCards();
-restartButton.addEventListener("click", resetGame);
+  restartButton.addEventListener("click", resetGame);
+});
