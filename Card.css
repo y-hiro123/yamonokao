@@ -2,18 +2,30 @@ body{
     background-color: black;
 }
 
+h4{
+    writing-mode: vertical-lr;
+    color: white;
+    position: fixed;
+    font-size: 40px;
+    font-weight: bold;
+    margin: inherit;
+    position: absolute;
+    margin-top: 70px;
+}
+
 h1{
     font-size: 200px;
     padding-left: 350px;
     color: white;
 }
 
-button{
-    font-size: 30px;
-    text-align: center;
-    color: red;
+a{
+    text-decoration: none;
+    color: white;
     font-weight: bold;
-    background-color: white;
+    font-style: italic;
+    font-size: 30px;
+    margin: 20px;
 }
 
 table{
