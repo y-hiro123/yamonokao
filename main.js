@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   let cpuScore = 0;
   let isPlayerTurn = true;
   let cpuMemory = {}; // CPU の記憶用
+  let imgDisplay = null; // ゲットした画像を保持する変数
+  let playerItems = []; // プレイヤーがゲットした画像のリスト
 
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -111,7 +113,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (matchedCount === cards.length / 2) {
           setTimeout(() => {
-            alert("ゲーム終了！");
+            if (playerScore > cpuScore) {
+              playerWin();
+            }
           }, 500);
         }
 
@@ -201,8 +205,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     playerScoreElement.textContent = "プレイヤー: 0";
     cpuScoreElement.textContent = "CPU: 0";
 
+    // ゲットした画像を非表示に
+    if (imgDisplay) {
+      imgDisplay.style.display = "none"; // 画像を非表示にする
+    }
+
     shuffle(cards);
     createCards();
+  }
+
+  // プレイヤーが勝った時にランダムでアイテムをゲットする関数
+  function playerWin() {
+    // プレイヤーがまだ獲得していない画像のリスト
+    const availableItems = images.filter(item => !playerItems.includes(item));
+
+    // もし獲得可能なアイテムがあれば、ランダムで選ぶ
+    if (availableItems.length > 0) {
+      const randomItem = availableItems[Math.floor(Math.random() * availableItems.length)];
+
+      // 獲得した画像を playerItems に追加
+      playerItems.push(randomItem);
+
+      alert(`プレイヤーの勝利！画像「${randomItem}」を獲得しました。`);
+
+      // 画像を表示する処理
+      imgDisplay = document.createElement("img");
+      imgDisplay.src = randomItem;
+      imgDisplay.style.width = "300px";
+      imgDisplay.style.height = "300px";
+      imgDisplay.style.objectFit = "cover";
+      
+      // 画面上に獲得した画像を表示
+      document.body.appendChild(imgDisplay);
+    }
   }
 
   createCards();
