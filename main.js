@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   let playerScore = 0;
   let cpuScore = 0;
   let isPlayerTurn = true;
-  let cpuMemory = {}; // CPU の記憶用
-  let imgDisplay = null; // ゲットした画像を保持する変数
-  let playerItems = []; // プレイヤーがゲットした画像のリスト
+  let cpuMemory = {}; // CPUの記憶用
+  let imgDisplay = null; // 獲得したアイテムを表示する要素
+  let playerItems = []; // プレイヤーが獲得した画像のリスト
 
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     cards.forEach((symbol) => {
       const card = document.createElement("div");
       card.classList.add("card");
-      card.dataset.symbol = symbol; // 画像のパスをデータ属性にセット
+      card.dataset.symbol = symbol;
 
       const frontFace = document.createElement("div");
       frontFace.classList.add("front");
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!cpuMemory[symbol]) {
       cpuMemory[symbol] = [];
     }
-    if (cpuMemory[symbol].length < 2) {
+    if (!cpuMemory[symbol].includes(card)) {
       cpuMemory[symbol].push(card);
     }
   }
@@ -167,12 +167,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    let firstChoice, secondChoice;
+    let firstChoice = null, secondChoice = null;
 
     for (let symbol in cpuMemory) {
-      if (cpuMemory[symbol].length < 2) {
-        [firstChoice, secondChoice] = cpuMemory[symbol];
-        cpuMemory[symbol] = [];
+      let storedCards = cpuMemory[symbol].filter(card => !card.classList.contains("flipped") && !card.classList.contains("matched"));
+      if (storedCards.length >= 2) {
+        [firstChoice, secondChoice] = storedCards;
         break;
       }
     }
@@ -184,15 +184,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       } while (secondChoice === firstChoice);
     }
 
-    flipCard(firstChoice);
     setTimeout(() => {
-      flipCard(secondChoice);
-      firstCard = firstChoice;
-      secondCard = secondChoice;
-      checkMatch();
+      flipCard(firstChoice);
+      setTimeout(() => {
+        flipCard(secondChoice);
+        firstCard = firstChoice;
+        secondCard = secondChoice;
+        checkMatch();
+      }, 1000);
     }, 1000);
   }
-
   function resetGame() {
     firstCard = null;
     secondCard = null;
@@ -202,41 +203,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     cpuScore = 0;
     isPlayerTurn = true;
     cpuMemory = {};
+  
     playerScoreElement.textContent = "プレイヤー: 0";
     cpuScoreElement.textContent = "CPU: 0";
-
-    // ゲットした画像を非表示に
+  
+    // 獲得アイテム欄は消さずにそのまま保持
     if (imgDisplay) {
-      imgDisplay.style.display = "none"; // 画像を非表示にする
+        imgDisplay.style.display = "block"; // 獲得アイテム欄を表示
     }
-
+  
     shuffle(cards);
     createCards();
   }
+  
 
-  // プレイヤーが勝った時にランダムでアイテムをゲットする関数
   function playerWin() {
-    // プレイヤーがまだ獲得していない画像のリスト
     const availableItems = images.filter(item => !playerItems.includes(item));
 
-    // もし獲得可能なアイテムがあれば、ランダムで選ぶ
     if (availableItems.length > 0) {
       const randomItem = availableItems[Math.floor(Math.random() * availableItems.length)];
-
-      // 獲得した画像を playerItems に追加
       playerItems.push(randomItem);
 
-      alert(`プレイヤーの勝利！画像「${randomItem}」を獲得しました。`);
+      alert(`🎉 プレイヤーの勝利！「${randomItem}」を獲得しました！`);
 
-      // 画像を表示する処理
-      imgDisplay = document.createElement("img");
-      imgDisplay.src = randomItem;
-      imgDisplay.style.width = "300px";
-      imgDisplay.style.height = "300px";
-      imgDisplay.style.objectFit = "cover";
-      
-      // 画面上に獲得した画像を表示
-      document.body.appendChild(imgDisplay);
+      if (!imgDisplay) {
+        imgDisplay = document.createElement("div");
+        imgDisplay.id = "collected-items";
+        imgDisplay.style.marginTop = "20px";
+        imgDisplay.innerHTML = "<h3>🏆 獲得したアイテム</h3>";
+        document.body.appendChild(imgDisplay);
+      }
+
+      const imgElement = document.createElement("img");
+      imgElement.src = randomItem;
+      imgElement.style.width = "100px";
+      imgElement.style.height = "100px";
+      imgElement.style.objectFit = "cover";
+      imgElement.style.margin = "5px";
+      imgDisplay.appendChild(imgElement);
+    } else {
+      alert("🎉 すべてのアイテムを獲得しました！");
     }
   }
 
