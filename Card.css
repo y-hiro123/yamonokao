@@ -1,10 +1,10 @@
 body{
-    background-color: black;
+    background-color: black; /*画面を黒に*/
 }
 
 h4{
     writing-mode: vertical-lr;
-    color: white;
+    color: white; /*文字を白に*/
     position: fixed;
     font-size: 40px;
     font-weight: bold;
@@ -16,14 +16,14 @@ h4{
 h1{
     font-size: 200px;
     padding-left: 350px;
-    color: white;
+    color: white; /*文字を白に*/
 }
 
 a{
     text-decoration: none;
-    color: white;
+    color: white; /*文字を白に*/
     font-weight: bold;
-    font-style: italic;
+    font-style: italic; /*文字を斜めに*/
     font-size: 30px;
     margin: 20px;
 }
@@ -34,11 +34,11 @@ table{
 }
 
 p{
-    color:white;
+    color:white; /*文字を白に*/
     font-weight: bold;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; /*フォント変更*/
     font-size: 20px;
     padding-top: 170px;
     margin: 30px;
-    font-style: italic;
+    font-style: italic; /*文字を斜めに*/
 }
