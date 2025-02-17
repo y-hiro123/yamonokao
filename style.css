@@ -1,0 +1,68 @@
+body {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  background-image: url(img/1218717.jpg);
+  background-size: 1920px;
+}
+
+#game-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 640px;
+  margin: 20px auto;
+}
+
+.card {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+  cursor: pointer;
+}
+
+.card .front, .card .back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.card .front {
+  background-color: gray;
+}
+
+.card .back {
+  transform: rotateY(180deg);
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+h1{
+  color: black;
+  font-weight: bold;
+  -webkit-text-stroke: 8px red;
+  paint-order: stroke;
+  text-shadow: white 3px 0 7px;
+}
+
+#player-score{
+  color: white;
+  font-weight: bold;
+  -webkit-text-stroke: 4px red;
+  paint-order: stroke;
+  text-shadow: yellow 5px 0 10px;
+  margin-right: 20px;
+}
+
+#cpu-score{
+  color: white;
+  font-weight: bold;
+  -webkit-text-stroke: 4px red;
+  paint-order: stroke;
+  text-shadow: yellow 5px 0 10px;
+}
+
