@@ -38,10 +38,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 画像のリストをロードする
   async function loadImages() {
     return [
-      "img/IMG_4146.jpg", "img/IMG_4147.JPG", "img/IMG_4148.JPG",
-      "img/IMG_4149.JPG", "img/IMG_4150.JPG", "img/IMG_4151.JPG",
-      "img/IMG_4283.JPG", "img/IMG_4284.JPG", "img/IMG_4285.JPG",
-      "img/IMG_4286.JPG", "img/IMG_4287.JPG", "img/IMG_4288.JPG"
+      "img/on1.JPG", "img/on2.JPG", "img/on3.JPG",
+      "img/on4.JPG", "img/on5.JPG", "img/on6.JPG",
+      "img/on7.JPG", "img/on8.JPG", "img/on9.JPG",
+      "img/on10.JPG", "img/on11.JPG", "img/on12.JPG"
     ];
   }
 
