@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     imgDisplay = document.createElement("div");
     imgDisplay.id = "collected-items";
     imgDisplay.style.marginTop = "20px";
-    imgDisplay.innerHTML = "<h3>🏆 獲得したアイテム</h3>";
     document.body.appendChild(imgDisplay);
   }
 
