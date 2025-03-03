@@ -1,0 +1,32 @@
+body{
+    background-color: black; /*画面を黒に*/
+}
+
+h1{
+    font-size: 150px;
+    padding-left: 560px;
+    color: white; /*文字を白に*/
+}
+
+p{
+    color:white;
+    font-weight: bold;
+    font-size: 20px; /*文字を白に*/
+}
+
+a{
+    text-decoration: none;
+    color: white; /*文字を白に*/
+    font-weight: bold;
+    font-style: italic; /*文字を斜めに*/
+    margin-left: 850px;
+    font-size: 50px;
+}
+
+h4{
+    color:white; /*文字を白に*/
+    font-weight: bold;
+    font-style: italic; /*文字を斜めに*/
+    margin-left: 1500px;
+    margin-top: 90px;
+}
