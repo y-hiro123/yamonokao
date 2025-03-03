@@ -241,21 +241,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     const availableItems = images.filter(item => !playerItems.includes(item));
 
     if (availableItems.length > 0) {
-      const randomItem = availableItems[Math.floor(Math.random() * availableItems.length)];
-      playerItems.push(randomItem);
-      alert(`🎉 プレイヤーの勝利！「${randomItem}」を獲得しました！`);
+        const randomItem = availableItems[Math.floor(Math.random() * availableItems.length)];
+        playerItems.push(randomItem);
+        alert(`🎉 プレイヤーの勝利！「${randomItem}」を獲得しました！`);
 
-      const imgElement = document.createElement("img");
-      imgElement.src = randomItem;
-      imgElement.style.width = "100px";
-      imgElement.style.height = "100px";
-      imgElement.style.objectFit = "cover";
-      imgElement.style.margin = "5px";
-      imgDisplay.appendChild(imgElement);
+        // すでに表示されている場合は追加しない
+        if (!imgDisplay.querySelector(`img[src="${randomItem}"]`)) {
+            const imgElement = document.createElement("img");
+            imgElement.src = randomItem;
+            imgElement.style.width = "100px";
+            imgElement.style.height = "100px";
+            imgElement.style.objectFit = "cover";
+            imgElement.style.margin = "5px";
+            imgDisplay.appendChild(imgElement);
+        }
+
+        // Cookie に保存
+        saveItemToCookie(randomItem);
     } else {
-      alert("🎉 すべてのアイテムを獲得しました！");
+        alert("🎉 すべてのアイテムを獲得しました！");
     }
-  }
+}
+
+  function saveItemToCookie(item) {
+    let existingItems = getItemsFromCookie();  // 既存のアイテムを取得
+    if (!existingItems.includes(item)) {
+        existingItems.push(item);  // 新しいアイテムを追加
+        document.cookie = `playerItems=${JSON.stringify(existingItems)}; path=/; max-age=31536000`; // 1年間保存
+    }
+}
+
 
   createCards();
   restartButton.addEventListener("click", resetGame);
