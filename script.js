@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.body.appendChild(imgDisplay);
   }
 
+  // 配列をシャッフルする
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 画像のリストをロードする
   async function loadImages() {
     return [
       "img/IMG_4146.jpg", "img/IMG_4147.JPG", "img/IMG_4148.JPG",
@@ -43,11 +45,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     ];
   }
 
+  // 画像をランダムに選択する
   function getRandomImages(imageArray, count) {
     let shuffled = [...imageArray].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   }
 
+  // ゲームボード上にカードを生成する
   function createCards() {
     gameBoard.innerHTML = "";
     shuffle(cards);
@@ -93,10 +97,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // カードを表にする
   function flipCard(card) {
     card.classList.add("flipped");
   }
 
+  // カードを裏に戻す
   function unflipCards(card1, card2) {
     setTimeout(() => {
       card1.classList.remove("flipped");
@@ -105,6 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 1000);
   }
 
+  // CPUがカードを記憶する
   function rememberCard(card) {
     const symbol = card.dataset.symbol;
     if (!cpuMemory[symbol]) {
@@ -113,6 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     cpuMemory[symbol].add(card);
   }
 
+  // 2枚のカードが一致しているかチェックする
   function checkMatch() {
     if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
       firstCard.classList.add("matched");
@@ -151,6 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ターンをリセットする（必要なら交代もする）
   function resetTurn(switchTurn) {
     firstCard = null;
     secondCard = null;
@@ -168,6 +177,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // CPUのターン処理
   function cpuTurn() {
     if (isPlayerTurn || preventClick) return;
     preventClick = true;
@@ -207,6 +217,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 1000);
   }
 
+  // ゲームをリセットする
   function resetGame() {
     firstCard = null;
     secondCard = null;
@@ -226,6 +237,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     createCards();
   }
 
+  // プレイヤーが勝利した場合の処理
   function playerWin() {
     const availableItems = images.filter(item => !playerItems.includes(item));
 
